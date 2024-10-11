@@ -32,13 +32,17 @@ if question := st.chat_input(placeholder="Ask me anything..."):
 
     async def handle_chat():
         response = await search.identify_specific_document(messages)
-        messages.append({"from": "assistant", "message": response['question']})
+        if response and 'question' in response:
+            messages.append({"from": "assistant", "message": response['question']})
 
-        if not response['isFinal']:
-            st.chat_message("assistant").write(response['question'])
+            if not response['isFinal']:
+                st.chat_message("assistant").write(response['question'])
+            else:
+                st.session_state.isFinal = True
+                st.chat_message("assistant").write("Your question is comfirmed: " + response['question'] + "\n\n please wait for the answer...")
         else:
-            st.session_state.isFinal = True
-            st.chat_message("assistant").write("Your question is comfirmed: " + response['question'] + "\n\n please wait for the answer...")
+            st.info("Please add your correct key to initialize the chatbot")
+            st.stop()
 
     asyncio.run(handle_chat())
 
@@ -51,15 +55,16 @@ if st.session_state.isFinal:
             need_multi_documents,
             need_following_questions
         )
-        messages.append({"from": "assistant", "message": final_response.answer})
-        if need_multi_documents and need_following_questions:
-            st.chat_message("assistant").write("Answer:\n\n" + final_response.answer + "\n\n" + "Follow up questions:\n\n" + '\n\n'.join(final_response.followingQuestions) + "\n\n" + "Documents: \n\n" + json.dumps(final_response.documents))
-        elif need_multi_documents and not need_following_questions:
-            st.chat_message("assistant").write("Answer:\n\n" + final_response.answer + "\n\n" + "Documents: \n\n" + json.dumps(final_response.documents))
-        elif not need_multi_documents and need_following_questions:
-            st.chat_message("assistant").write("Answer:\n\n" + final_response.answer + "\n\n" + "Follow up questions:\n\n" + '\n\n'.join(final_response.followingQuestions))
-        else:
-            st.chat_message("assistant").write("Answer:\n\n" + final_response.answer)
+        if final_response and 'answer' in final_response and final_response.answer != '':
+            messages.append({"from": "assistant", "message": final_response.answer})
+            answer_content = '"Answer:\n\n"' + final_response.answer
+            if need_following_questions:
+                answer_content += '\n\n"Following questions:\n\n' + final_response.followingQuestions + '"'
+            if need_multi_documents:
+                answer_content += '\n\n"Documents:\n\n' + json.dumps(final_response.documents) + '"'
+            st.chat_message("assistant").write(answer_content)
+        elif final_response and 'answer' in final_response and final_response.answer == '':
+            st.chat_message("assistant").write("Sorry, I don't have an answer for your question.")
 
 
         st.session_state.isFinal = False
