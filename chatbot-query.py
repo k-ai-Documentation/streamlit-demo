@@ -1,8 +1,7 @@
 import streamlit as st
 import asyncio
 
-from kai_sdk_python.index import KaiStudio
-from kai_sdk_python.index import KaiStudioCredentials
+from kai_sdk_python.index import KaiStudio, KaiStudioCredentials
 
 import json
 import os
@@ -22,8 +21,6 @@ if 'chat_history' not in st.session_state:
 st.title("KAI Chatbot")
 
 messages = st.session_state.chat_history
-for message in messages:
-    st.chat_message(message['from']).write(message['message'])
 
 if question := st.chat_input(placeholder="Ask me anything..."):
     messages.append({"from": "user", "message": question})
@@ -33,7 +30,7 @@ if question := st.chat_input(placeholder="Ask me anything..."):
         final_response = await search.query(
             st.session_state.chat_history[-1]['message'], 
             "userid",
-            '',  
+            'knowledge manager',  
             need_multi_documents,
             need_following_questions
         )
