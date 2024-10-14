@@ -21,6 +21,8 @@ if 'chat_history' not in st.session_state:
 st.title("KAI Chatbot")
 
 messages = st.session_state.chat_history
+for message in messages:
+    st.chat_message(message['from']).write(message['message'])
 
 if question := st.chat_input(placeholder="Ask me anything..."):
     messages.append({"from": "user", "message": question})
@@ -34,17 +36,17 @@ if question := st.chat_input(placeholder="Ask me anything..."):
             need_multi_documents,
             need_following_questions
         )
-        if final_response and 'answer' in final_response:
+        if final_response:
             messages.append({"from": "assistant", "message": final_response.answer})
 
             if final_response.answer == '':
                 st.chat_message("assistant").write("I don't know the answer to that question.")
             else:
-                answer_content = '"Answer:\n\n"' + final_response.answer
+                answer_content = 'Answer:\n\n"' + final_response.answer
                 if need_following_questions:
-                    answer_content += '\n\n"Following questions:\n\n' + final_response.followingQuestions + '"'
+                    answer_content += '\n\nFollowing questions:\n\n' + json.dumps(final_response.followingQuestions)
                 if need_multi_documents:
-                    answer_content += '\n\n"Documents:\n\n' + json.dumps(final_response.documents) + '"'
+                    answer_content += '\n\nDocuments:\n\n' + json.dumps(final_response.documents) 
                 st.chat_message("assistant").write(answer_content)
         else:
             st.info("Please add your correct key to initialize the chatbot")

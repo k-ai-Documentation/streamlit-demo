@@ -1,7 +1,7 @@
 #!/bin/bash
-export ORGANIZATION_ID="c977644b-8b4a-43ee-8901-a609ef3b9e19"
-export INSTANCE_ID="08e20bb9-e03e-4546-a03f-0ae2c50c208f"
-export API_KEY="+BHN5Ye1QpYJgiDsQZttzi7SaufB2UoUeOZsii70TPQ="
+export ORGANIZATION_ID=""
+export INSTANCE_ID=""
+export API_KEY=""
 
 export NEED_MULTI_DOCUMENTS="True"
 export NEED_FOLLOWING_QUESTIONS="True"

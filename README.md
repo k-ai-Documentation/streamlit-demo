@@ -131,10 +131,15 @@ st.session_state is a Streamlit feature used to persist variables across interac
 
 chat_history holds the entire conversation (messages).
 
-### Handling User Input and Messages
+### Save messages in chat_history
 ```python
 messages = st.session_state.chat_history
+for message in messages:
+    st.chat_message(message['from']).write(message['message'])
+```
 
+### Handling User Input and Messages
+```python
 if question := st.chat_input(placeholder="Ask me anything..."):
     messages.append({"from": "user", "message": question})
     st.chat_message("user").write(question)
