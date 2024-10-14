@@ -3,7 +3,6 @@ import asyncio
 
 from kai_sdk_python.index import KaiStudio, KaiStudioCredentials
 
-import json
 import os
 
 credentials = KaiStudioCredentials(organizationId=os.environ.get("ORGANIZATION_ID"),
@@ -58,7 +57,6 @@ if st.session_state.isFinal:
             need_following_questions
         )
         if final_response and final_response.answer != '':
-            messages.append({"from": "assistant", "message": final_response.answer})
             answer_content = 'Answer:\n\n"' + final_response.answer
             if need_following_questions:
                 following_questions = "\n\nFollowing questions:\n"
@@ -71,8 +69,10 @@ if st.session_state.isFinal:
                 for i, doc in enumerate(final_response.documents, 1):
                     documents += f"{i}. [{doc['name']}]({doc['url']})\n"
                 answer_content += documents
+            messages.append({"from": "assistant", "message": answer_content})
             st.chat_message("assistant").write(answer_content)
         elif final_response and final_response.answer == '':
+            messages.append({"from": "assistant", "message": final_response.answer})
             st.chat_message("assistant").write("Sorry, I don't have an answer for your question.")
 
         st.session_state.isFinal = False
