@@ -44,9 +44,16 @@ if question := st.chat_input(placeholder="Ask me anything..."):
             else:
                 answer_content = 'Answer:\n\n"' + final_response.answer
                 if need_following_questions:
-                    answer_content += '\n\nFollowing questions:\n\n' + json.dumps(final_response.followingQuestions)
+                    following_questions = "\n\nFollowing questions:\n"
+                    for i, question in enumerate(final_response.followingQuestions, 1):
+                        following_questions += f"{i}. {question}\n"
+                    answer_content += following_questions
+                
                 if need_multi_documents:
-                    answer_content += '\n\nDocuments:\n\n' + json.dumps(final_response.documents) 
+                    documents = "\n\nDocuments:\n"
+                    for i, doc in enumerate(final_response.documents, 1):
+                        documents += f"{i}. [{doc['name']}]({doc['url']})\n"
+                    answer_content += documents
                 st.chat_message("assistant").write(answer_content)
         else:
             st.info("Please add your correct key to initialize the chatbot")
