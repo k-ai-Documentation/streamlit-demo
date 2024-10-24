@@ -31,6 +31,43 @@ export API_KEY="Your API Key"
 export NEED_MULTI_DOCUMENTS="True" # Set this to "True" if you want to search multiple documents, otherwise set it to "False"
 export NEED_FOLLOWING_QUESTIONS="True" # Set this to "True" if you want to ask following questions, otherwise set it to "False"
 ```
+#### Run and set your env
+- local
+```
+source env.sh # Mac or Linux
+```
+or
+```
+. .\env.sh # Windows
+source ./env.sh # If you have installed git for windows
+```
+- docker
+```
+docker run -e ORGANIZATION_ID="Your Organization ID" -e INSTANCE_ID="Your Instance ID" -e API_KEY="Your API Key" -e NEED_MULTI_DOCUMENTS="True" -e NEED_FOLLOWING_QUESTIONS="True" -p 8501:8501 kai-studio-python:latest
+```
+- kubernetes
+You need to delfine a deployment.yaml file with env variables.
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kai-studio-python
+spec:
+  containers:
+  - name: kai-studio-python
+    image: kai-studio-python:latest
+    env:
+    - name: ORGANIZATION_ID
+      value: "Your Organization ID"
+    - name: INSTANCE_ID
+      value: "Your Instance ID"
+    - name: API_KEY
+      value: "Your API Key"
+    - name: NEED_MULTI_DOCUMENTS
+      value: "True"
+    - name: NEED_FOLLOWING_QUESTIONS
+      value: "True"
+```
 4. Run the Streamlit app.
 ```bash
 streamlit run chatbot-need-identify-document.py
