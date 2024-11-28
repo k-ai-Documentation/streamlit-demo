@@ -32,15 +32,14 @@ if question := st.chat_input(placeholder="Ask me anything..."):
 
     async def handle_chat():
         response = await search.identify_specific_document(messages)
-        if response and 'response' in response:
-            answer_content = response["response"]
-            messages.append({"from": "assistant", "message": answer_content['question']})
+        if response:
+            messages.append({"from": "assistant", "message": response['question']})
 
-            if not answer_content['isFinal']:
-                st.chat_message("assistant").write(answer_content['question'])
+            if not response['isFinal']:
+                st.chat_message("assistant").write(response['question'])
             else:
                 st.session_state.isFinal = True
-                st.chat_message("assistant").write("Your question is comfirmed: " + answer_content['question'] + "\n\n please wait for the answer...")
+                st.chat_message("assistant").write("Your question is comfirmed: " + response['question'] + "\n\n please wait for the answer...")
         else:
             st.info("Please add your correct key to initialize the chatbot")
             st.stop()
@@ -56,23 +55,23 @@ if st.session_state.isFinal:
             need_multi_documents,
             need_following_questions
         )
-        if final_response and final_response.answer != '':
-            answer_content = 'Answer:\n\n"' + final_response.answer
+        if final_response and final_response['answer'] != '':
+            answer_content = 'Answer:\n\n"' + final_response['answer']
             if need_following_questions:
                 following_questions = "\n\nFollowing questions:\n"
-                for i, question in enumerate(final_response.followingQuestions, 1):
+                for i, question in enumerate(final_response['followingQuestions'], 1):
                     following_questions += f"{i}. {question}\n"
                 answer_content += following_questions
             
             if need_multi_documents:
                 documents = "\n\nDocuments:\n"
-                for i, doc in enumerate(final_response.documents, 1):
+                for i, doc in enumerate(final_response['documents'], 1):
                     documents += f"{i}. [{doc['name']}]({doc['url']})\n"
                 answer_content += documents
             messages.append({"from": "assistant", "message": answer_content})
             st.chat_message("assistant").write(answer_content)
-        elif final_response and final_response.answer == '':
-            messages.append({"from": "assistant", "message": final_response.answer})
+        elif final_response and final_response['answer'] == '':
+            messages.append({"from": "assistant", "message": final_response['answer']})
             st.chat_message("assistant").write("Sorry, I don't have an answer for your question.")
 
         st.session_state.isFinal = False

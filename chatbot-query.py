@@ -37,20 +37,20 @@ if question := st.chat_input(placeholder="Ask me anything..."):
         )
         if final_response:
 
-            if final_response.answer == '':
+            if final_response['answer'] == '':
                 messages.append({"from": "assistant", "message": "I don't know the answer to that question."})
                 st.chat_message("assistant").write("I don't know the answer to that question.")
             else:
-                answer_content = 'Answer:\n\n"' + final_response.answer
+                answer_content = 'Answer:\n\n"' + final_response['answer']
                 if need_following_questions:
                     following_questions = "\n\nFollowing questions:\n"
-                    for i, question in enumerate(final_response.followingQuestions, 1):
+                    for i, question in enumerate(final_response['followingQuestions'], 1):
                         following_questions += f"{i}. {question}\n"
                     answer_content += following_questions
                 
                 if need_multi_documents:
                     documents = "\n\nDocuments:\n"
-                    for i, doc in enumerate(final_response.documents, 1):
+                    for i, doc in enumerate(final_response['documents'], 1):
                         documents += f"{i}. [{doc['name']}]({doc['url']})\n"
                     answer_content += documents
                 messages.append({"from": "assistant", "message": answer_content})
