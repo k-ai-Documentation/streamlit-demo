@@ -1,5 +1,5 @@
 # streamlit-demo
-In this repo, you will find two demo files, which are used to demonstrate how to use the Streamlit with KAI SDK PYTHON.
+In this repo, you will find two demo files, which are used to demonstrate how to use the Streamlit with [KAI SDK PYTHON](https://github.com/k-ai-Documentation/sdk-python/tree/version2.0).
 ## chatbot-need-identify-document.py
 This file is used to demonstrate how to use the Streamlit with KAI SDK PYTHON to create a chatbot with 2 steps. The first step is to correct and identify the question from user, the second step is to search the correct question from the knowledge base and get an answer.
 ## chatbot-query.py
