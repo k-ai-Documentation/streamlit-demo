@@ -79,6 +79,20 @@ streamlit run chatbot-query.py
 5. Open the Streamlit app in your browser.
 
 ## Process
+### chatbot-gptlike.py
+1. Send user message 
+
+chatbot.conversation return data like :
+```json 
+{
+  "id": "conversation_id",
+  "message": {
+    "action": "QUALIFY_QUESTION or SEARCH", // represent the step of action of the chatbot, it will indicate you if the chatbot search across your KB or he is asking you more contextual information to identify exactly what you are looking for
+    "content": "chat message",
+    "datas": {} // response from the search.query sub endpoint 
+  }
+}
+```
 ### chatbot-need-identify-document.py
 1. Send user message to search.identify_specific_document.
 
@@ -129,6 +143,22 @@ For On-Premise users, you need to set the environment variables as follows:
 export HOST="Your Host"
 export API_KEY="Your API Key" # This is optional depending on your deployment
 ```
+
+### Conversation Configuration Settings
+```python
+need_multi_documents = os.environ.get("NEED_MULTI_DOCUMENTS") == "True"
+need_following_questions = os.environ.get("NEED_FOLLOWING_QUESTIONS") == "True"
+```
+chatbot.conversation need 4 arguments
+
+    >conversation_id: 'id of the conversation if you already setup a conversation'
+
+    >user_message: 'message of the user'
+
+    >multi_documents: 'true if you want to search across multiple documents, false if you want to retrieve an answer following only one document'
+
+    >user_id: '(optional) user identifier to log for this query'
+
 
 ### Searching Configuration Settings
 ```python
