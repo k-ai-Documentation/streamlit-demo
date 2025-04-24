@@ -13,6 +13,7 @@ need_multi_documents = os.environ.get("NEED_MULTI_DOCUMENTS") == "True"
 need_following_questions = os.environ.get("NEED_FOLLOWING_QUESTIONS") == "False"
 
 chatbot = KaiStudio(credentials).chatbot()
+core = KaiStudio(credentials).core()
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
@@ -53,16 +54,13 @@ if user_message := st.chat_input(placeholder="Write your message here", key="use
         progress_bar.empty()
         progress_text.empty()
 
-        if response['message']['action'] == 'SEARCH' and response['message']['datas']['isAnswered']:
-            answer_content = "Sources:\n"
-            for i, doc in enumerate(response['message']['datas']['documents'], 1):
-                answer_content += f"{i}. [{doc['name']}]({doc['url']})\n"
-            content = response['message']['content'] + '\n\n' + answer_content
-            st.session_state.chat_history.append({ "from": "assistant", "message": content })
-            st.chat_message("assistant").write(content)
-        else:
-            st.session_state.chat_history.append({ "from": "assistant", "message": response['message']['content'] })
-            st.chat_message("assistant").write(response['message']['content'])
+        answer_content = "Sources:\n"
+        for i, doc in enumerate(response['message']['datas']['sources'], 1):
+            doc_detail = await core.get_doc_signature(doc)
+            answer_content += f"{i}. [{doc_detail['name']}]({doc_detail['url']})\n"
+        content = response['message']['content'] + '\n\n' + answer_content
+        st.session_state.chat_history.append({ "from": "assistant", "message": content })
+        st.chat_message("assistant").write(content)
 
             
     asyncio.run(handle_chat())
