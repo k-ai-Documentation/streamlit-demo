@@ -1,21 +1,13 @@
 # streamlit-demo
 In this repo, you will find two demo files, which are used to demonstrate how to use the Streamlit with [KAI SDK PYTHON](https://github.com/k-ai-Documentation/sdk-python/tree/version2.0).
-## chatbot-need-identify-document.py
-This file is used to demonstrate how to use the Streamlit with KAI SDK PYTHON to create a chatbot with 2 steps. The first step is to correct and identify the question from user, the second step is to search the correct question from the knowledge base and get an answer.
+## chatbot-gptlike.py
+This file is used to demonstrate how to use the Streamlit with KAI SDK PYTHON to create a chatbot with 1 step. The first step is to ask a question and get an answer. You can continue to ask questions and get more details. Feel free to chat like a human.
 ## chatbot-query.py
 This file is used to demonstrate how to use the Streamlit with KAI SDK PYTHON to create a chatbot with 1 step. The first step is to search the question from the knowledge base and get an answer.
 
 ## How to use
 1. Clone the repo to your local machine.
 2. Install the required packages.
-```bash
-pip install -r requirements.txt
-```
-Our kai_sdk_python package is on github, you can install it by:
-```bash
-pip install git+https://github.com/k-ai-Documentation/sdk-python.git@version2.0
-```
-or you can install it by:
 ```bash
 pip install -r requirements.txt
 ```
@@ -70,7 +62,7 @@ spec:
 ```
 4. Run the Streamlit app.
 ```bash
-streamlit run chatbot-need-identify-document.py
+streamlit run chatbot-gptlike.py
 ```
 or
 ```bash
@@ -93,20 +85,7 @@ chatbot.conversation return data like :
   }
 }
 ```
-### chatbot-need-identify-document.py
-1. Send user message to search.identify_specific_document.
 
-search.identify_specific_document return data like :
-```json
-{
-    "isFinal": false,
-    "question": "Could you please specify what 'key' refers to? Are you asking about a specific document, method, or concept?"
-}
-```
-This step will correct and help user find the right question.
-If isFinal is False, repeat step 1.
-
-2. If isFinal is True, send question found by search.identify_specific_document to search.query.
 ### chatbot-query.py
 1. Send user message to search.query.
 
