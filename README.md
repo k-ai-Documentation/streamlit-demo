@@ -33,6 +33,16 @@ or
 . .\env.sh # Windows
 source ./env.sh # If you have installed git for windows
 ```
+Run the Streamlit app.
+```bash
+streamlit run chatbot-gptlike.py
+```
+or
+```bash
+streamlit run chatbot-query.py
+```
+Open the Streamlit app in your browser.
+
 - docker
 ```
 docker run -e ORGANIZATION_ID="Your Organization ID" -e INSTANCE_ID="Your Instance ID" -e API_KEY="Your API Key" -e NEED_MULTI_DOCUMENTS="True" -e NEED_FOLLOWING_QUESTIONS="True" -p 8501:8501 kai-studio-python:latest
@@ -60,15 +70,6 @@ spec:
     - name: NEED_FOLLOWING_QUESTIONS
       value: "True"
 ```
-4. Run the Streamlit app.
-```bash
-streamlit run chatbot-gptlike.py
-```
-or
-```bash
-streamlit run chatbot-query.py
-```
-5. Open the Streamlit app in your browser.
 
 ## Process
 ### chatbot-gptlike.py
