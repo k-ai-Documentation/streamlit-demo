@@ -19,7 +19,7 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
     st.session_state.conversation_id = ""
 
-st.title("KAI Chatbot for CEVA Logistics")
+st.title("KAI Chatbot")
 
 for message in st.session_state.chat_history:
     st.chat_message(message['from']).write(message['message'])    
