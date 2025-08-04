@@ -1,18 +1,17 @@
 import streamlit as st
 import asyncio
 
-from kai_sdk_python.index import KaiStudio, KaiStudioCredentials
+from kai_sdk_python.index import KaiStudioInstance, KaiStudioCredentials
 
 import os
 
-credentials = KaiStudioCredentials(organizationId=os.environ.get("ORGANIZATION_ID"),
-                                   instanceId=os.environ.get("INSTANCE_ID"),
-                                   apiKey=os.environ.get("API_KEY"))
+credentials = KaiStudioCredentials(instance_id=os.environ.get("INSTANCE_ID"),
+                                   api_key=os.environ.get("API_KEY"))
 
 need_multi_documents = os.environ.get("NEED_MULTI_DOCUMENTS") == "True"
 need_following_questions = os.environ.get("NEED_FOLLOWING_QUESTIONS") == "True"
 
-search = KaiStudio(credentials).search()
+search = KaiStudioInstance(credentials).search()
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
@@ -31,28 +30,13 @@ if question := st.chat_input(placeholder="Ask me anything..."):
         final_response = await search.query(
             st.session_state.chat_history[-1]['message'], 
             "userid",
-            'knowledge manager',  
-            need_multi_documents,
-            need_following_questions
         )
         if final_response:
-
-            if final_response['answer'] == '':
+            if final_response.answer == '':
                 messages.append({"from": "assistant", "message": "I don't know the answer to that question."})
                 st.chat_message("assistant").write("I don't know the answer to that question.")
             else:
-                answer_content = 'Answer:\n\n"' + final_response['answer']
-                if need_following_questions:
-                    following_questions = "\n\nFollowing questions:\n"
-                    for i, question in enumerate(final_response['followingQuestions'], 1):
-                        following_questions += f"{i}. {question}\n"
-                    answer_content += following_questions
-                
-                if need_multi_documents:
-                    documents = "\n\nDocuments:\n"
-                    for i, doc in enumerate(final_response['documents'], 1):
-                        documents += f"{i}. [{doc['name']}]({doc['url']})\n"
-                    answer_content += documents
+                answer_content = 'Answer:\n\n"' + final_response.answer
                 messages.append({"from": "assistant", "message": answer_content})
                 st.chat_message("assistant").write(answer_content)
         else:
